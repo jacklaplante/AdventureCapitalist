@@ -1,4 +1,4 @@
-import { Scene, PlaneGeometry, MeshBasicMaterial, BoxGeometry, Mesh, LoopRepeat, DirectionalLight, HemisphereLight, DoubleSide, AnimationMixer, Color, LoopOnce} from 'three'
+import { Scene, PlaneGeometry, MeshBasicMaterial, BoxGeometry, Mesh, PlaneBufferGeometry, DirectionalLight, HemisphereLight, DoubleSide, AnimationMixer, Color, LoopOnce} from 'three'
 
 import {createTextMesh} from './utils'
 import {colors} from './constants'
@@ -13,10 +13,10 @@ scene.add(new HemisphereLight( 0xffffbb, 0x38761D, 0.75));
 scene.add(new DirectionalLight(colors.sunLightColor));
 
 let geometry = new PlaneGeometry(10000, 10000);
-let material = new MeshBasicMaterial( {color: colors.groundGreen, side: DoubleSide} );
+let material = new MeshBasicMaterial( {color: colors.groundGreen} );
 let mesh = new Mesh( geometry, material );
 // mesh.position.copy(new Vector3(0, -5, -5));
-mesh.rotateX(Math.PI/2);
+mesh.rotateX(-Math.PI/2);
 scene.add(mesh);
 
 scene.animate = function(delta) {
@@ -98,6 +98,11 @@ loader.load(models("./building_bottom.glb"), (gltf) => {
         mixer.addEventListener('finished', () => {
             building.moneyToBePickedUp = 10 * (building.floors.length);
         });
+
+        let shadow = new Mesh(new PlaneBufferGeometry(5, 5), new MeshBasicMaterial({color:0x1c5c48}));
+        shadow.rotateX(-Math.PI/2);
+        shadow.position.set(0,0.1,0)
+        scene.add(shadow);
     
         scene.upgradeBusiness = function() {
             building.addFloor();
