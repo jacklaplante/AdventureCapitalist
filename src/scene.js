@@ -12,7 +12,7 @@ scene.clickables = [];
 scene.add(new HemisphereLight( 0xffffbb, 0x38761D, 0.75));
 scene.add(new DirectionalLight(colors.sunLightColor));
 
-let geometry = new PlaneGeometry( 10, 10, 10 );
+let geometry = new PlaneGeometry(10000, 10000);
 let material = new MeshBasicMaterial( {color: colors.groundGreen, side: DoubleSide} );
 let mesh = new Mesh( geometry, material );
 // mesh.position.copy(new Vector3(0, -5, -5));

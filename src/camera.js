@@ -14,4 +14,10 @@ camera.pan = function(x, y) {
   camera.position.z -= y * speed;
 }
 
+camera.updatePosition = function(nextPos) {
+  if (nextPos.z > 4 && nextPos.z < 100 && nextPos.y > 1) {
+    camera.position.copy(nextPos)
+  }
+}
+
 export default camera;

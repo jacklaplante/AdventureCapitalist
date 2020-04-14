@@ -1,4 +1,4 @@
-import { Clock, Raycaster, Vector2 } from 'three'
+import { Clock, Raycaster, Vector2, Vector3 } from 'three'
 import scene from './scene'
 import camera from './camera'
 import { renderer } from './renderer'
@@ -42,30 +42,51 @@ function start(playerNameInput) {
     document.addEventListener('mousedown', onMouseDown);
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('wheel', updateCamera);
     document.getElementById("upgrade-button").onclick = (() => {
         scene.upgradeBusiness();
     })
 }
 
+function updateCamera() {
+    let dist = -event.deltaY * 0.005
+    let dir = new Vector3();
+    camera.getWorldDirection(dir);
+    let nextPos = camera.position.clone().add(dir.normalize().multiplyScalar(dist))
+    camera.updatePosition(nextPos)
+}
+
 function onMouseMove(e) {
     if (mouseDown) {
-        camera.pan(e.movementX, e.movementY);
+        let scalar = 0.001 * camera.position.length()
+        let dir = new Vector3(-e.movementX*scalar, e.movementY*scalar, 0)
+        let nextPos = camera.localToWorld(dir)
+        camera.updatePosition(nextPos)
     }
 }
 
 var mouseDown = false;
+var mouseTarget;
 function onMouseDown(e) {
     mouseDown = true;
+    mouseTarget = objectClicked(e);
+}
+
+function onMouseUp(e) {
+    mouseDown = false;
+    let object = objectClicked(e);
+    if (mouseTarget && object.position.equals(mouseTarget.position) && object.onclick) {
+        object.onclick();
+    }
+}
+
+function objectClicked(e) {
     var raycaster = new Raycaster();
     raycaster.setFromCamera(new Vector2(( e.clientX / window.innerWidth ) * 2 - 1, - ( e.clientY / window.innerHeight ) * 2 + 1), camera);
     var collisions = raycaster.intersectObjects(scene.clickables);
     if (collisions.length > 0 && collisions[0].object.onclick) {
-        collisions[0].object.onclick();
+        return collisions[0].object;
     }
-}
-
-function onMouseUp() {
-    mouseDown = false;
 }
 
 export {start}
