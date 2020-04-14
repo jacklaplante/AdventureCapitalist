@@ -27,6 +27,7 @@ scene.animate = function(delta) {
 
 var loader = new GLTFLoader();
 var animationMixers = []
+var money = 0;
 
 var building = {}
 loader.load(models("./building_bottom.glb"), (gltf) => {
@@ -44,6 +45,7 @@ loader.load(models("./building_bottom.glb"), (gltf) => {
                 loadingAnim: loadingAnim
             }],
             top: gltf.scene,
+            moneyToBePickedUp: 0,
             updateClickable: function() {
                 if (this.clickable) {
                     scene.remove(this.clickable)
@@ -55,6 +57,12 @@ loader.load(models("./building_bottom.glb"), (gltf) => {
                 this.clickable.material.visible = false;
     
                 this.clickable.onclick = function() {
+                    if (building.moneyToBePickedUp == -1) return;
+                    if (building.moneyToBePickedUp > 0) {
+                        money += building.moneyToBePickedUp;
+                        document.getElementById("money").innerText = money + "$"
+                    }
+                    building.moneyToBePickedUp = -1;
                     building.floors.forEach((building) => building.loadingAnim.stop());
                     building.floors[building.floors.length-1].loadingAnim.play();
                 }
@@ -86,6 +94,10 @@ loader.load(models("./building_bottom.glb"), (gltf) => {
             }
         }
         building.updateClickable();
+
+        mixer.addEventListener('finished', () => {
+            building.moneyToBePickedUp = 10 * (building.floors.length);
+        });
     
         scene.upgradeBusiness = function() {
             building.addFloor();
