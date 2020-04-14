@@ -1,0 +1,14 @@
+body {
+    margin: 0px;
+    display: grid;
+    touch-action: none;
+    background-color: #134461;
+}
+
+canvas {
+    background-color: #134461;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    position: fixed;
+}
