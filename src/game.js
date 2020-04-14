@@ -75,7 +75,7 @@ function onMouseDown(e) {
 function onMouseUp(e) {
     mouseDown = false;
     let object = objectClicked(e);
-    if (mouseTarget && object.position.equals(mouseTarget.position) && object.onclick) {
+    if (mouseTarget && object && object.position.equals(mouseTarget.position) && object.onclick) {
         object.onclick();
     }
 }
