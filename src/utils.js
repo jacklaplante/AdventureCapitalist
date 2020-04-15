@@ -117,4 +117,4 @@ function initTouchElements(elements) {
     })
 }
 
-export {uuid, addCollisionLine, removeCollisionLines, showSpatialIndexLines, localVector, getAnimation, eachDo, getRandom, initTouchElements, createTextMesh, randomVector}
+export { uuid, addCollisionLine, removeCollisionLines, showSpatialIndexLines, localVector, getAnimation, eachDo, getRandom, initTouchElements, createTextMesh, randomVector}

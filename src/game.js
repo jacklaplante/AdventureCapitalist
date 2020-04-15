@@ -4,12 +4,11 @@ import camera from './camera'
 import { renderer } from './renderer'
 import { getRandom } from './utils'
 import { adjectives, nouns } from './constants'
+import businesses from './businesses/businesses'
 
 var clock = new Clock();
 
 window.addEventListener('resize', resize);
-
-
 
 function animate() {
     requestAnimationFrame( animate );
@@ -68,8 +67,18 @@ function onMouseMove(e) {
 var mouseDown = false;
 var mouseTarget;
 function onMouseDown(e) {
+    if (e.target.tagName != "CANVAS") return;
     mouseDown = true;
-    mouseTarget = objectClicked(e);
+    let object = objectClicked(e);
+    if (!(mouseTarget && object && object.position.equals(mouseTarget.position))) {
+        hideContextMenu();
+    }
+    mouseTarget = object;
+}
+
+var menu = document.getElementById('context-menu')
+function hideContextMenu() {
+    menu.style.display = 'none'
 }
 
 function onMouseUp(e) {
@@ -83,7 +92,7 @@ function onMouseUp(e) {
 function objectClicked(e) {
     var raycaster = new Raycaster();
     raycaster.setFromCamera(new Vector2(( e.clientX / window.innerWidth ) * 2 - 1, - ( e.clientY / window.innerHeight ) * 2 + 1), camera);
-    var collisions = raycaster.intersectObjects(scene.clickables);
+    var collisions = raycaster.intersectObjects(businesses.getClickables());
     if (collisions.length > 0 && collisions[0].object.onclick) {
         return collisions[0].object;
     }
