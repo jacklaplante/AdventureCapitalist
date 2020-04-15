@@ -32,7 +32,7 @@ function addBusiness(business, type) {
         loadingAnim.play();
         scene.animationMixers.push(mixer);
         building.productObj = g.scene.clone();
-        building.productObj.position.copy(business.position.clone().setZ(2).setY(-1));
+        building.productObj.position.copy(business.position.clone().setZ(3).setY(-0.5));
         building.productObj.scale.copy(new Vector3(0.65, 0.65, 0.65))
         mixer = new AnimationMixer(building.productObj);
         loadingAnim = mixer.clipAction(anim)
@@ -44,10 +44,9 @@ function addBusiness(business, type) {
           scene.remove(this.clickable) // make sure this gets called
         }
         let height = 3 + (this.floors.length-1) * 1.2;
-        let geometry = new BoxGeometry( 4, height, 4 );
+        let geometry = new BoxGeometry(4, height, 5);
         let clickable = new Mesh(geometry);
-        clickable.position.x = business.position.x;
-        clickable.position.y = height/2;
+        clickable.position.set(business.position.x, height/2, 0.5);
         clickable.material.visible = false;
 
         clickable.onclick = function() {
@@ -103,7 +102,7 @@ function addBusiness(business, type) {
 
       let shadow = new Mesh(new PlaneBufferGeometry(5, 5), new MeshBasicMaterial({color:0x1c5c48}));
       shadow.rotateX(-Math.PI/2);
-      shadow.position.set(business.position.x, 0.1,0)
+      shadow.position.set(business.position.x, 0.05,0)
       scene.add(shadow);
     })
   })
