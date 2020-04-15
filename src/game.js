@@ -42,9 +42,6 @@ function start(playerNameInput) {
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
     document.addEventListener('wheel', updateCamera);
-    document.getElementById("upgrade-button").onclick = (() => {
-        scene.upgradeBusiness();
-    })
 }
 
 function updateCamera() {

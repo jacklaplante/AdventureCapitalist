@@ -36,11 +36,14 @@ function addBusiness(business) {
         clickable.material.visible = false;
 
         clickable.onclick = function() {
-          showContextMenu();
+          contextMenu.menu.style.display = "block";
+          contextMenu.upgrade.innerText = "UPGRADE";
+          contextMenu.upgrade.onclick = _ => {
+            building.upgrade();
+          }
           if (building.moneyToBePickedUp == -1) return;
           if (building.moneyToBePickedUp > 0) {
-            scene.money += building.moneyToBePickedUp;
-            document.getElementById("money").innerText = scene.money + "$"
+            addMoney(building.moneyToBePickedUp);
           }
           building.moneyToBePickedUp = -1;
           building.floors.forEach((building) => building.loadingAnim.stop());
@@ -50,8 +53,11 @@ function addBusiness(business) {
         scene.add(clickable);
         building.clickable = clickable;
       }
-      building.addFloor = function() {
+      building.upgrade = function() {
+        if ((scene.money - business.upgradeCost) <= 0) return;
+        subtractMoney(business.upgradeCost);
         loader.load(models("./building_middle.glb"), (gltf) => {
+          gltf.scene.position.copy(business.position);
           gltf.scene.position.y += (2 + (this.floors.length-1) * 1.2);
           building.top.position.y = gltf.scene.position.y + 1.2;
           scene.add(gltf.scene);
@@ -82,21 +88,27 @@ function addBusiness(business) {
       shadow.rotateX(-Math.PI/2);
       shadow.position.set(business.position.x, 0.1,0)
       scene.add(shadow);
-  
-      scene.upgradeBusiness = function() {
-          building.addFloor();
-      }
     })
   })
+}
+
+function subtractMoney(money) {
+  scene.money -= money;
+  updateMoney()
+}
+
+function addMoney(money) {
+  scene.money += money;
+  updateMoney()
+}
+
+function updateMoney() {
+  document.getElementById("money").innerText = scene.money + "$"
 }
 
 var contextMenu = {
   menu: document.getElementById('context-menu'),
   upgrade: document.getElementById('upgrade-button')
-}
-function showContextMenu() {
-  contextMenu.menu.style.display = "block";
-  contextMenu.upgrade.innerText = "UPGRADE";
 }
 
 export {addBusiness}

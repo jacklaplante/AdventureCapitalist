@@ -3,7 +3,7 @@ import {addBusiness} from './business'
 
 // these will be used to create the initial values of each business, and increase them
 var pointers = {
-  position: new Vector3(),
+  position: new Vector3(-3, 0, 0),
   profit: 10,
   upgradeCost: 10
 }
@@ -22,7 +22,7 @@ function createBusiness() {
     upgradeCost: pointers.upgradeCost
   }
   addBusiness(business);
-  pointers.position.x += 10;
+  pointers.position.x += 6;
   pointers.profit *= 5;
   pointers.upgradeCost *= 5;
   return business;
