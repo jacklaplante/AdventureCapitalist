@@ -23,6 +23,6 @@ scene.animate = function(delta) {
 
 scene.animationMixers = []
 scene.clickables = []
-scene.money = 0;
+scene.money = 1000;
 
 export default scene

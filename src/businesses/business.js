@@ -14,6 +14,8 @@ function addBusiness(business, type) {
     scene.add(gltf.scene);
     let mixer = new AnimationMixer(gltf.scene);
     let loadingAnim = mixer.clipAction(getAnimation(gltf, "loading.001"));
+    building.pickUpAnim = mixer.clipAction(getAnimation(gltf, "truck_pickup"));
+    building.pickUpAnim.loop = LoopOnce;
     loadingAnim.loop = LoopOnce;
     loadingAnim.clampWhenFinished = true;
     scene.animationMixers.push(mixer);
@@ -55,21 +57,31 @@ function addBusiness(business, type) {
           contextMenu.upgrade.onclick = _ => {
             building.upgrade();
           }
-          if (building.moneyToBePickedUp == -1) return;
-          if (building.moneyToBePickedUp > 0) {
-            scene.remove(building.productObj)
-            addMoney(building.moneyToBePickedUp);
+          contextMenu.manager.innerText = "BUY MANAGER";
+          contextMenu.manager.onclick = _ => {
+            building.buyManager();
           }
-          building.moneyToBePickedUp = -1;
-          building.floors.forEach((building) => building.loadingAnim.stop());
-          building.floors[building.floors.length-1].loadingAnim.play();
+          if (building.moneyToBePickedUp == -1) return;
+          building.pickUp()
         }
 
         scene.add(clickable);
         building.clickable = clickable;
       }
+      building.pickUp = function() {
+        if (building.moneyToBePickedUp > 0) {
+          building.pickUpAnim.reset().play()
+          setTimeout(() => {
+            scene.remove(building.productObj)
+          }, 1000);
+          addMoney(building.moneyToBePickedUp);
+        }
+        building.moneyToBePickedUp = -1;
+        building.floors.forEach((building) => building.loadingAnim.stop());
+        building.floors[building.floors.length-1].loadingAnim.play();
+      }
       building.upgrade = function() {
-        if ((scene.money - business.upgradeCost) <= 0) return;
+        if ((scene.money - business.upgradeCost) < 0) return;
         subtractMoney(business.upgradeCost);
         loader.load(models("./building_middle.glb"), (gltf) => {
           gltf.scene.position.copy(business.position);
@@ -93,17 +105,34 @@ function addBusiness(business, type) {
           scene.animationMixers.push(mixer);
         });
       }
+      building.buyManager = function() {
+        if ((scene.money - business.managerCost) < 0) return;
+        subtractMoney(business.managerCost)
+        business.hasManager = true;
+        scene.add(this.manager)
+      }
       building.updateClickable();
 
-      mixer.addEventListener('finished', () => {
+      mixer.addEventListener('finished', (e) => {
+        if (e.action.getClip().name == "loading.001") {
           building.moneyToBePickedUp = business.profit * (building.floors.length);
           scene.add(building.productObj)
+          if (business.hasManager) {
+            building.pickUp()
+          }
+        }
       });
 
       let shadow = new Mesh(new PlaneBufferGeometry(5, 5), new MeshBasicMaterial({color:0x1c5c48}));
       shadow.rotateX(-Math.PI/2);
-      shadow.position.set(business.position.x, 0.05,0)
+      shadow.position.set(business.position.x, 0.075,0)
       scene.add(shadow);
+    })
+    loader.load(models('./eggs_manager.glb'), (gltf) => {
+      gltf.scene.position.copy(business.position);
+      gltf.scene.position.x -= 2
+      gltf.scene.position.z += 2
+      building.manager = gltf.scene;
     })
   })
 }
@@ -124,7 +153,8 @@ function updateMoney() {
 
 var contextMenu = {
   menu: document.getElementById('context-menu'),
-  upgrade: document.getElementById('upgrade-button')
+  upgrade: document.getElementById('upgrade-button'),
+  manager: document.getElementById('manager-button')
 }
 
 export {addBusiness}
