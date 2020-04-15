@@ -27,9 +27,17 @@ function addBusiness(business, type) {
       loader.load(models("./eggs.glb"), (g) => {
         gltf.scene.add(g.scene);
         let mixer = new AnimationMixer(g.scene);
-        let loadingAnim = mixer.clipAction(getAnimation(g, "rotate"));
+        let anim = getAnimation(g, "rotate")
+        let loadingAnim = mixer.clipAction(anim);
         loadingAnim.play();
         scene.animationMixers.push(mixer);
+        building.productObj = g.scene.clone();
+        building.productObj.position.copy(business.position.clone().setZ(2).setY(-1));
+        building.productObj.scale.copy(new Vector3(0.65, 0.65, 0.65))
+        mixer = new AnimationMixer(building.productObj);
+        loadingAnim = mixer.clipAction(anim)
+        loadingAnim.play()
+        scene.animationMixers.push(mixer)
       })
       building.updateClickable = function() {
         if (this.clickable) {
@@ -50,6 +58,7 @@ function addBusiness(business, type) {
           }
           if (building.moneyToBePickedUp == -1) return;
           if (building.moneyToBePickedUp > 0) {
+            scene.remove(building.productObj)
             addMoney(building.moneyToBePickedUp);
           }
           building.moneyToBePickedUp = -1;
@@ -89,6 +98,7 @@ function addBusiness(business, type) {
 
       mixer.addEventListener('finished', () => {
           building.moneyToBePickedUp = business.profit * (building.floors.length);
+          scene.add(building.productObj)
       });
 
       let shadow = new Mesh(new PlaneBufferGeometry(5, 5), new MeshBasicMaterial({color:0x1c5c48}));
