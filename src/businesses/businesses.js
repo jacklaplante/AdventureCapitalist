@@ -8,20 +8,20 @@ var pointers = {
   upgradeCost: 10
 }
 var businesses = {
-  eggs: createBusiness(),
+  eggs: createBusiness('eggs'),
   waffles: createBusiness(),
   coffeeMugs: createBusiness(),
   soccerBalls: createBusiness(),
   topHats: createBusiness()
 }
 
-function createBusiness() {
+function createBusiness(type) {
   let business =  {
     position: pointers.position.clone(),
     profit:pointers.profit,
     upgradeCost: pointers.upgradeCost
   }
-  addBusiness(business);
+  addBusiness(business, type);
   pointers.position.x += 6;
   pointers.profit *= 5;
   pointers.upgradeCost *= 5;

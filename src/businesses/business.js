@@ -6,7 +6,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 var loader = new GLTFLoader();
 const models = require.context("../../models");
 
-function addBusiness(business) {
+function addBusiness(business, type) {
   business.building = {}
   let building = business.building
   loader.load(models("./building_bottom.glb"), (gltf) => {
@@ -24,11 +24,18 @@ function addBusiness(business) {
       building.floors = [{loadingAnim: loadingAnim}];
       building.top = gltf.scene
       building.moneyToBePickedUp = 0
+      loader.load(models("./eggs.glb"), (g) => {
+        gltf.scene.add(g.scene);
+        let mixer = new AnimationMixer(g.scene);
+        let loadingAnim = mixer.clipAction(getAnimation(g, "rotate"));
+        loadingAnim.play();
+        scene.animationMixers.push(mixer);
+      })
       building.updateClickable = function() {
         if (this.clickable) {
           scene.remove(this.clickable) // make sure this gets called
         }
-        let height = 2 + (this.floors.length-1) * 1.2;
+        let height = 3 + (this.floors.length-1) * 1.2;
         let geometry = new BoxGeometry( 4, height, 4 );
         let clickable = new Mesh(geometry);
         clickable.position.x = business.position.x;
