@@ -23,7 +23,10 @@ function addBusiness(business, type) {
       gltf.scene.position.copy(business.position);
       scene.add(gltf.scene);
       gltf.scene.position.y += 2;
-      building.floors = [{loadingAnim: loadingAnim}];
+      building.floors = [{
+        loadingAnim: loadingAnim,
+        floorObj: gltf.scene
+      }];
       building.top = gltf.scene
       building.moneyToBePickedUp = 0
       loader.load(models("./eggs.glb"), (g) => {
@@ -87,22 +90,42 @@ function addBusiness(business, type) {
         subtractMoney(business.upgradeCost);
         loader.load(models("./building_middle.glb"), (gltf) => {
           gltf.scene.position.copy(business.position);
-          gltf.scene.position.y += (2 + (this.floors.length-1) * 1.2);
-          building.top.position.y = gltf.scene.position.y + 1.2;
+          gltf.scene.position.y += 2;
           scene.add(gltf.scene);
+
           let mixer = new AnimationMixer(gltf.scene);
           let loadingAnim = mixer.clipAction(getAnimation(gltf, "loading.001"))
           loadingAnim.clampWhenFinished = true;
           loadingAnim.loop = LoopOnce;
+          if (building.moneyToBePickedUp > 0) { // when the product is ready, make sure the new floor is green
+            loadingAnim.play()
+            loadingAnim.time = 2;
+            loadingAnim.paused = true
+          }
 
-          this.floors.push({
-            loadingAnim: loadingAnim
-          });
+          let newFloor = {
+            loadingAnim: loadingAnim,
+            floorObj: gltf.scene,
+            next: this.floors[0]
+          }
+          
+          if (this.floors.length >= 2) {
+            this.floors.splice(1, 0, newFloor)
+            for (let i = 2; i < this.floors.length; i++) {
+              let floor = this.floors[i];
+              floor.next = this.floors[i-1]
+              let floorObj = floor.floorObj;
+              floorObj.position.copy(business.position)
+              floorObj.position.y += (2 + (i-1) * 1.2);
+            }
+          } else {
+            this.floors.push(newFloor);
+          }
 
           this.updateClickable();
-          let index = this.floors.length - 1;
+          building.top.position.y = (2 + (this.floors.length-1) * 1.2);
           mixer.addEventListener('finished', () => { // play the next floors animation in a chain
-            this.floors[index-1].loadingAnim.reset().play()
+            newFloor.next.loadingAnim.reset().play()
           });
           scene.animationMixers.push(mixer);
         });
