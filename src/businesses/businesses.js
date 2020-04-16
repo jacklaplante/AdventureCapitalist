@@ -5,6 +5,7 @@ import {addBusiness} from './business'
 var pointers = {
   position: new Vector3(-3, 0, 0),
   profit: 10,
+  productionRate: 1,
   upgradeCost: 10,
   managerCost: 100,
 }
@@ -19,7 +20,8 @@ var businesses = {
 function createBusiness(type) {
   let business =  {
     position: pointers.position.clone(),
-    profit:pointers.profit,
+    profit: pointers.profit,
+    productionRate: pointers.productionRate,
     upgradeCost: pointers.upgradeCost,
     managerCost: pointers.managerCost,
     hasManager: false
@@ -27,6 +29,7 @@ function createBusiness(type) {
   addBusiness(business, type);
   pointers.position.x += 7;
   pointers.profit *= 5;
+  pointers.productionRate *= 0.5;
   pointers.upgradeCost *= 5;
   pointers.managerCost *= 5;
   return business;

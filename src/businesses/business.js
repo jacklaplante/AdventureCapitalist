@@ -14,6 +14,7 @@ function addBusiness(business, type) {
     scene.add(gltf.scene);
     let mixer = new AnimationMixer(gltf.scene);
     let loadingAnim = mixer.clipAction(getAnimation(gltf, "loading.001"));
+    loadingAnim.timeScale = business.productionRate;
     building.pickUpAnim = mixer.clipAction(getAnimation(gltf, "truck_pickup"));
     building.pickUpAnim.loop = LoopOnce;
     loadingAnim.loop = LoopOnce;
@@ -30,15 +31,15 @@ function addBusiness(business, type) {
         gltf.scene.add(g.scene);
         let mixer = new AnimationMixer(g.scene);
         let anim = getAnimation(g, "rotate")
-        let loadingAnim = mixer.clipAction(anim);
-        loadingAnim.play();
+        let rotateAnim = mixer.clipAction(anim);
+        rotateAnim.play();
         scene.animationMixers.push(mixer);
         building.productObj = g.scene.clone();
         building.productObj.position.copy(business.position.clone().setZ(3).setY(-0.5));
         building.productObj.scale.copy(new Vector3(0.65, 0.65, 0.65))
         mixer = new AnimationMixer(building.productObj);
-        loadingAnim = mixer.clipAction(anim)
-        loadingAnim.play()
+        rotateAnim = mixer.clipAction(anim)
+        rotateAnim.play()
         scene.animationMixers.push(mixer)
       })
       building.updateClickable = function() {
@@ -51,6 +52,9 @@ function addBusiness(business, type) {
         clickable.position.set(business.position.x, height/2, 0.5);
         clickable.material.visible = false;
         clickable.onclick = function(x, y) {
+          if (building.moneyToBePickedUp != -1) {
+            building.pickUp()
+          }
           contextMenu.menu.style.display = "inline-block";
           contextMenu.menu.style.left = x + "px"
           contextMenu.menu.style.top = y + "px"
@@ -72,8 +76,6 @@ function addBusiness(business, type) {
           contextMenu.manager.onclick = _ => {
             building.buyManager();
           }
-          if (building.moneyToBePickedUp == -1) return;
-          building.pickUp()
         }
 
         scene.add(clickable);
@@ -106,6 +108,7 @@ function addBusiness(business, type) {
           let loadingAnim = mixer.clipAction(getAnimation(gltf, "loading.001"))
           loadingAnim.clampWhenFinished = true;
           loadingAnim.loop = LoopOnce;
+          loadingAnim.timeScale = business.productionRate;
 
           this.floors.push({
             loadingAnim: loadingAnim
@@ -208,7 +211,8 @@ var contextMenu = {
   upgrade: document.getElementById('upgrade-button'),
   upgradeCost: document.getElementById('upgrade-button').querySelector('.cost'),
   manager: document.getElementById('manager-button'),
-  managerCost: document.getElementById('manager-button').querySelector('.cost')
+  managerCost: document.getElementById('manager-button').querySelector('.cost'),
+  businessInfo: document.getElementById('business-info')
 }
 
 export {addBusiness}
