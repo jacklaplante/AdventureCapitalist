@@ -73,6 +73,8 @@ function addBusiness(business, type) {
           building.pickUpAnim.reset().play()
           setTimeout(() => {
             scene.remove(building.productObj)
+            building.manager.idleAnim.stop()
+            building.manager.waveAnim.reset().play()
           }, 1000);
           addMoney(building.moneyToBePickedUp);
         }
@@ -132,7 +134,19 @@ function addBusiness(business, type) {
       gltf.scene.position.copy(business.position);
       gltf.scene.position.x -= 2
       gltf.scene.position.z += 2
+      let mixer = new AnimationMixer(gltf.scene);
+      let idleAnim = mixer.clipAction(getAnimation(gltf, "Idle"));
+      let waveAnim = mixer.clipAction(getAnimation(gltf, "Wave"));
+      mixer.addEventListener('finished', () => {
+        idleAnim.play();
+      });
+      waveAnim.loop = LoopOnce
+      idleAnim.timeScale = 0.5;
+      idleAnim.play();
+      scene.animationMixers.push(mixer);
       building.manager = gltf.scene;
+      building.manager.idleAnim = idleAnim;
+      building.manager.waveAnim = waveAnim;
     })
   })
 }
