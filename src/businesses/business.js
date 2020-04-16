@@ -51,7 +51,7 @@ function addBusiness(business, type) {
         clickable.position.set(business.position.x, height/2, 0.5);
         clickable.material.visible = false;
         clickable.onclick = function(x, y) {
-          contextMenu.menu.style.display = "block";
+          contextMenu.menu.style.display = "inline-block";
           contextMenu.menu.style.left = x + "px"
           contextMenu.menu.style.top = y + "px"
           if (scene.money - business.upgradeCost < 0) {
@@ -95,6 +95,7 @@ function addBusiness(business, type) {
       }
       building.upgrade = function() {
         if ((scene.money - business.upgradeCost) < 0) return;
+        document.getElementById('context-menu').style.display = 'none'
         subtractMoney(business.upgradeCost);
         loader.load(models("./building_middle.glb"), (gltf) => {
           gltf.scene.position.copy(business.position);
@@ -142,6 +143,7 @@ function addBusiness(business, type) {
       }
       building.buyManager = function() {
         if ((scene.money - business.managerCost) < 0) return;
+        document.getElementById('context-menu').style.display = 'none'
         subtractMoney(business.managerCost)
         business.hasManager = true;
         if (building.moneyToBePickedUp > 0) {

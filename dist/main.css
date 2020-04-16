@@ -2,6 +2,7 @@ body {
     margin: 0px;
     display: grid;
     touch-action: none;
+    font-family: 'Roboto Mono', monospace;
 }
 
 canvas {
@@ -15,15 +16,22 @@ canvas {
     display: none;
     position: fixed;
     background: beige;
-    padding: 12pt;
+    padding: 12pt 12pt 8pt 12pt;
     border-radius: 8pt;
     border: 2pt solid #73AD21;
+    font-size: 18pt;
+}
+
+#context-menu div {
+    padding: 0 0 6pt 0;
 }
 
 #context-menu .cost {
-    display: inline;
+    /* display: inline; */
     float: right;
-    padding: 0 0 0 12pt;
+    margin: 0 0 0 12pt;
+    font-weight: 700;
+    display: inline-block;
 }
 
 #context-menu .enabled:hover, #context-menu .enabled .cost:hover {
@@ -32,7 +40,14 @@ canvas {
     cursor: pointer;
 }
 
-#context-menu .disabled, #context-menu .disabled .cost {
+#context-menu .disabled {
     text-decoration: line-through;
+}
+
+#context-menu .disabled .cost {
+    color: rgb(192, 37, 37);
+}
+
+#context-menu .disabled, #context-menu .disabled .cost {
     cursor: not-allowed;
 }
