@@ -76,7 +76,7 @@ function addBusiness(business, type) {
           contextMenu.manager.onclick = _ => {
             building.buyManager();
           }
-          contextMenu.businessInfo.info.innerText = business.type + ": " + business.profit + "x" + building.floors.length + " = "
+          contextMenu.businessInfo.info.innerText = business.name + ": " + business.profit + "x" + building.floors.length + " = "
           contextMenu.businessInfo.profit.innerText = "+$" + business.profit*building.floors.length;
         }
 
@@ -205,7 +205,7 @@ function addMoney(money) {
 }
 
 function updateMoney() {
-  document.getElementById("money").innerText = scene.money + "$"
+  document.getElementById("money").innerText = "$" + scene.money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 var contextMenu = {

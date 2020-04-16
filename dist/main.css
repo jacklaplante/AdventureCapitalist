@@ -12,6 +12,14 @@ canvas {
     position: fixed;
 }
 
+#money {
+    position: fixed;
+    bottom: 10vh;
+    left: 10vw;
+    font-size: 80pt;
+    color: rgb(255, 232, 188);
+}
+
 #context-menu {
     display: none;
     position: fixed;
@@ -21,7 +29,7 @@ canvas {
     border: 2pt solid #73AD21;
     font-size: 18pt;
     bottom: 10vh;
-    right: 10vh;
+    right: 10vw;
 }
 
 #context-menu div {

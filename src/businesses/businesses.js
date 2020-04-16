@@ -23,6 +23,8 @@ types.forEach((type) => {
 })
 
 function createBusiness(type) {
+  let name = type.replace( /([A-Z])/g, " $1" );
+  name = name.charAt(0).toUpperCase() + name.slice(1);
   let business =  {
     position: pointers.position.clone(),
     profit: pointers.profit,
@@ -30,7 +32,7 @@ function createBusiness(type) {
     upgradeCost: pointers.upgradeCost,
     managerCost: pointers.managerCost,
     hasManager: false,
-    type: type
+    name: name
   }
   addBusiness(business, type);
   pointers.position.x += 7;
