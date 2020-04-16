@@ -56,14 +56,14 @@ function addBusiness(business, type) {
             building.pickUp()
           }
           contextMenu.menu.style.display = "inline-block";
-          contextMenu.menu.style.left = x + "px"
-          contextMenu.menu.style.top = y + "px"
+          // contextMenu.menu.style.left = x + "px"
+          // contextMenu.menu.style.top = y + "px"
           if (scene.money - business.upgradeCost < 0) {
             contextMenu.upgrade.className = 'disabled';
           } else {
             contextMenu.upgrade.className = 'enabled';
           }
-          contextMenu.upgradeCost.innerText = business.upgradeCost + "$";
+          contextMenu.upgradeCost.innerText = "-$" + business.upgradeCost;
           contextMenu.upgrade.onclick = _ => {
             building.upgrade();
           }
@@ -72,10 +72,12 @@ function addBusiness(business, type) {
           } else {
             contextMenu.manager.className = 'enabled';
           }
-          contextMenu.managerCost.innerText = business.managerCost + "$";
+          contextMenu.managerCost.innerText = "-$" + business.managerCost;
           contextMenu.manager.onclick = _ => {
             building.buyManager();
           }
+          contextMenu.businessInfo.info.innerText = business.type + ": " + business.profit + "x" + building.floors.length + " = "
+          contextMenu.businessInfo.profit.innerText = "+$" + business.profit*building.floors.length;
         }
 
         scene.add(clickable);
@@ -212,7 +214,10 @@ var contextMenu = {
   upgradeCost: document.getElementById('upgrade-button').querySelector('.cost'),
   manager: document.getElementById('manager-button'),
   managerCost: document.getElementById('manager-button').querySelector('.cost'),
-  businessInfo: document.getElementById('business-info')
+  businessInfo: {
+    info: document.getElementById('business-info').querySelector('.info'),
+    profit: document.getElementById('business-info').querySelector('.cost')
+  }
 }
 
 export {addBusiness}

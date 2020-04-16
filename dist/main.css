@@ -20,10 +20,21 @@ canvas {
     border-radius: 8pt;
     border: 2pt solid #73AD21;
     font-size: 18pt;
+    bottom: 10vh;
+    right: 10vh;
 }
 
 #context-menu div {
     padding: 0 0 6pt 0;
+}
+
+#business-info {
+    border-bottom: 2pt solid #73AD21;
+    margin-bottom: 10pt;
+}
+
+#business-info .info {
+    display: inline-block;
 }
 
 #context-menu .cost {

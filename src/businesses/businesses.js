@@ -9,13 +9,18 @@ var pointers = {
   upgradeCost: 10,
   managerCost: 100,
 }
-var businesses = {
-  eggs: createBusiness('eggs'),
-  waffles: createBusiness(),
-  coffeeMugs: createBusiness(),
-  soccerBalls: createBusiness(),
-  topHats: createBusiness()
-}
+
+const types = [
+  'eggs',
+  'waffles',
+  'coffeeMugs',
+  'soccerBalls',
+  'topHats'
+]
+const businesses = {}
+types.forEach((type) => {
+  businesses[type] = createBusiness(type);
+})
 
 function createBusiness(type) {
   let business =  {
@@ -24,7 +29,8 @@ function createBusiness(type) {
     productionRate: pointers.productionRate,
     upgradeCost: pointers.upgradeCost,
     managerCost: pointers.managerCost,
-    hasManager: false
+    hasManager: false,
+    type: type
   }
   addBusiness(business, type);
   pointers.position.x += 7;
