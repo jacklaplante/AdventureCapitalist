@@ -20,14 +20,14 @@ function addBusiness(business, type) {
     loadingAnim.loop = LoopOnce;
     loadingAnim.clampWhenFinished = true;
     scene.animationMixers.push(mixer);
-    loader.load(models("./building_top.glb"), (gltf) => {
+    loader.load(getModelOrDefault("building_top", type), (gltf) => {
       gltf.scene.position.copy(business.position);
       scene.add(gltf.scene);
       gltf.scene.position.y += 2;
       building.floors = [{loadingAnim: loadingAnim}];
       building.top = gltf.scene
       building.moneyToBePickedUp = 0
-      loader.load(models("./eggs.glb"), (g) => {
+      loader.load(getModelOrDefault('product', type), (g) => {
         gltf.scene.add(g.scene);
         let mixer = new AnimationMixer(g.scene);
         let anim = getAnimation(g, "rotate")
@@ -192,6 +192,14 @@ function addBusiness(business, type) {
       building.manager.waveAnim = waveAnim;
     })
   })
+}
+
+function getModelOrDefault(model, type) {
+  try {
+    return models("./"+model+"_"+type+".glb");
+  } catch (e) {
+    return models("./"+model+".glb");
+  }
 }
 
 function subtractMoney(money) {
