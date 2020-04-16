@@ -99,6 +99,28 @@ function addBusiness(business, type) {
             loadingAnim: loadingAnim
           });
 
+          for (let i = this.floors.length-1; i >= 0; i--) {
+            let floor = this.floors[i];
+            if (i > 0) {
+              let nextLoadingAnim = this.floors[i-1].loadingAnim;
+              let nextLoadingTime = nextLoadingAnim.time
+              if (nextLoadingTime>0) {
+                floor.loadingAnim.time = nextLoadingTime;
+                if (nextLoadingTime < nextLoadingAnim.getClip().duration) {
+                  floor.loadingAnim.play()
+                } else if (nextLoadingTime >= nextLoadingAnim.getClip().duration) {
+                  floor.loadingAnim.play().paused = true
+                }
+                nextLoadingAnim.stop()
+              }
+            } else {
+              let prevAnim = this.floors[1].loadingAnim
+              if (prevAnim.time >= prevAnim.getClip().duration) {
+                floor.loadingAnim.play()
+              }
+            }
+          }
+
           this.updateClickable();
           let index = this.floors.length - 1;
           mixer.addEventListener('finished', () => { // play the next floors animation in a chain
@@ -111,6 +133,9 @@ function addBusiness(business, type) {
         if ((scene.money - business.managerCost) < 0) return;
         subtractMoney(business.managerCost)
         business.hasManager = true;
+        if (building.moneyToBePickedUp > 0) {
+          building.pickUp();
+        }
         scene.add(this.manager)
       }
       building.updateClickable();
