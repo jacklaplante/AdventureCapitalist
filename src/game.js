@@ -82,7 +82,7 @@ function onMouseUp(e) {
     mouseDown = false;
     let object = objectClicked(e);
     if (mouseTarget && object && object.position.equals(mouseTarget.position) && object.onclick) {
-        object.onclick();
+        object.onclick(e.pageX, e.pageY);
     }
 }
 

@@ -13,4 +13,26 @@ canvas {
 
 #context-menu {
     display: none;
+    position: fixed;
+    background: beige;
+    padding: 12pt;
+    border-radius: 8pt;
+    border: 2pt solid #73AD21;
+}
+
+#context-menu .cost {
+    display: inline;
+    float: right;
+    padding: 0 0 0 12pt;
+}
+
+#context-menu .enabled:hover, #context-menu .enabled .cost:hover {
+    background-color: white;
+    color: rgb(0, 160, 0);
+    cursor: pointer;
+}
+
+#context-menu .disabled, #context-menu .disabled .cost {
+    text-decoration: line-through;
+    cursor: not-allowed;
 }

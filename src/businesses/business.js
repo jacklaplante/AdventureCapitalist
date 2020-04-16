@@ -50,14 +50,25 @@ function addBusiness(business, type) {
         let clickable = new Mesh(geometry);
         clickable.position.set(business.position.x, height/2, 0.5);
         clickable.material.visible = false;
-
-        clickable.onclick = function() {
+        clickable.onclick = function(x, y) {
           contextMenu.menu.style.display = "block";
-          contextMenu.upgrade.innerText = "UPGRADE";
+          contextMenu.menu.style.left = x + "px"
+          contextMenu.menu.style.top = y + "px"
+          if (scene.money - business.upgradeCost < 0) {
+            contextMenu.upgrade.className = 'disabled';
+          } else {
+            contextMenu.upgrade.className = 'enabled';
+          }
+          contextMenu.upgradeCost.innerText = business.upgradeCost + "$";
           contextMenu.upgrade.onclick = _ => {
             building.upgrade();
           }
-          contextMenu.manager.innerText = "BUY MANAGER";
+          if (scene.money - business.managerCost < 0) {
+            contextMenu.manager.className = 'disabled';
+          } else {
+            contextMenu.manager.className = 'enabled';
+          }
+          contextMenu.managerCost.innerText = business.managerCost + "$";
           contextMenu.manager.onclick = _ => {
             building.buyManager();
           }
@@ -193,7 +204,9 @@ function updateMoney() {
 var contextMenu = {
   menu: document.getElementById('context-menu'),
   upgrade: document.getElementById('upgrade-button'),
-  manager: document.getElementById('manager-button')
+  upgradeCost: document.getElementById('upgrade-button').querySelector('.cost'),
+  manager: document.getElementById('manager-button'),
+  managerCost: document.getElementById('manager-button').querySelector('.cost')
 }
 
 export {addBusiness}
