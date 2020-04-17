@@ -63,7 +63,7 @@ function addBusiness(business, type) {
           } else {
             contextMenu.upgrade.className = 'enabled';
           }
-          contextMenu.upgradeCost.innerText = "-$" + business.upgradeCost;
+          contextMenu.upgradeCost.innerText = "-" + toMoneyText(business.upgradeCost);
           contextMenu.upgrade.onclick = _ => {
             building.upgrade();
           }
@@ -72,12 +72,12 @@ function addBusiness(business, type) {
           } else {
             contextMenu.manager.className = 'enabled';
           }
-          contextMenu.managerCost.innerText = "-$" + business.managerCost;
+          contextMenu.managerCost.innerText = "-" + toMoneyText(business.managerCost);
           contextMenu.manager.onclick = _ => {
             building.buyManager();
           }
           contextMenu.businessInfo.info.innerText = business.name + ": " + business.profit + "x" + building.floors.length + " = "
-          contextMenu.businessInfo.profit.innerText = "+$" + business.profit*building.floors.length;
+          contextMenu.businessInfo.profit.innerText = "+" + toMoneyText(business.profit*building.floors.length);
         }
 
         scene.add(clickable);
@@ -173,7 +173,7 @@ function addBusiness(business, type) {
       shadow.position.set(business.position.x, 0.075,0)
       scene.add(shadow);
     })
-    loader.load(models('./eggs_manager.glb'), (gltf) => {
+    loader.load(getModelOrDefault('manager', type), (gltf) => {
       gltf.scene.position.copy(business.position);
       gltf.scene.position.x -= 2
       gltf.scene.position.z += 2
@@ -213,7 +213,11 @@ function addMoney(money) {
 }
 
 function updateMoney() {
-  document.getElementById("money").innerText = "$" + scene.money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  document.getElementById("money").innerText = toMoneyText(scene.money)
+}
+
+function toMoneyText(money) {
+  return "$" + money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 var contextMenu = {
