@@ -29,11 +29,6 @@ function resize() {
 }
 
 function start(playerNameInput) {
-    if (playerNameInput.length > 0 && playerNameInput.length < 50) {
-        global.playerName = playerNameInput
-    } else {
-        global.playerName = getRandom(adjectives) + ' ' + getRandom(nouns)
-    }
     document.getElementById("splash").remove();
     document.body.appendChild(renderer.domElement)
     animate();
