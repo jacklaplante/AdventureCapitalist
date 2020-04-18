@@ -1,13 +1,15 @@
 import {Vector3} from 'three'
 import {addBusiness} from './business'
 
-// these will be used to create the initial values of each business, and increase them
+// these will be used to create the initial values of each business, and increase them incrementally
 var pointers = {
   position: new Vector3(-3, 0, 0),
   profit: 10,
   productionRate: 1,
   upgradeCost: 10,
   managerCost: 100,
+  purchaseCost: 50,
+  shadowSize: 2, // coincidentally the products get bigger as they get more expensive so I will use this to roughly scale the shadow size as well
 }
 
 const types = [
@@ -32,7 +34,9 @@ function createBusiness(type) {
     upgradeCost: pointers.upgradeCost,
     managerCost: pointers.managerCost,
     hasManager: false,
-    name: name
+    name: name,
+    purchaseCost: pointers.purchaseCost,
+    shadowSize : pointers.shadowSize,
   }
   addBusiness(business, type);
   pointers.position.x += 7;
@@ -40,6 +44,8 @@ function createBusiness(type) {
   pointers.productionRate *= 0.5;
   pointers.upgradeCost *= 5;
   pointers.managerCost *= 5;
+  pointers.purchaseCost *= 5;
+  pointers.shadowSize *= 1.2;
   return business;
 }
 

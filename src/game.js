@@ -68,14 +68,16 @@ function onMouseDown(e) {
     mouseDown = true;
     let object = objectClicked(e);
     if (!(mouseTarget && object && object.position.equals(mouseTarget.position))) {
-        hideContextMenu();
+        hideMenus();
     }
     mouseTarget = object;
 }
 
-var menu = document.getElementById('context-menu')
-function hideContextMenu() {
-    menu.style.display = 'none'
+var contextMenu = document.getElementById('context-menu')
+var purchaseBusinessMenu = document.getElementById('purchase-business')
+function hideMenus() {
+    contextMenu.style.display = 'none'
+    purchaseBusinessMenu.style.display = 'none'
 }
 
 function onMouseUp(e) {

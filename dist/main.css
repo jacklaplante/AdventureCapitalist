@@ -20,7 +20,7 @@ canvas {
     color: rgb(255, 232, 188);
 }
 
-#context-menu {
+#context-menu, #purchase-business {
     display: none;
     position: fixed;
     background: beige;
@@ -41,11 +41,11 @@ canvas {
     margin-bottom: 10pt;
 }
 
-#business-info .info {
+#business-info .info, #purchase-business .message {
     display: inline-block;
 }
 
-#context-menu .cost {
+.cost {
     /* display: inline; */
     float: right;
     margin: 0 0 0 12pt;
@@ -53,20 +53,20 @@ canvas {
     display: inline-block;
 }
 
-#context-menu .enabled:hover, #context-menu .enabled .cost:hover {
+.enabled:hover, .enabled .cost:hover {
     background-color: white;
     color: rgb(0, 160, 0);
     cursor: pointer;
 }
 
-#context-menu .disabled {
+.disabled {
     text-decoration: line-through;
 }
 
-#context-menu .disabled .cost {
+.disabled .cost {
     color: rgb(192, 37, 37);
 }
 
-#context-menu .disabled, #context-menu .disabled .cost {
+.disabled, .disabled .cost {
     cursor: not-allowed;
 }
