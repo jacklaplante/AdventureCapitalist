@@ -1,5 +1,5 @@
-import {Vector3} from 'three'
-import {addBusiness} from './business'
+import { Vector3 } from "three";
+import { addBusiness } from "./business";
 
 // these will be used to create the initial values of each business, and increase them incrementally
 var pointers = {
@@ -10,24 +10,18 @@ var pointers = {
   managerCost: 100,
   purchaseCost: 50,
   shadowSize: 2, // coincidentally the products get bigger as they get more expensive so I will use this to roughly scale the shadow size as well
-}
+};
 
-const types = [
-  'eggs',
-  'waffles',
-  'coffeeMugs',
-  'soccerBalls',
-  'topHats'
-]
-const businesses = {}
+const types = ["eggs", "waffles", "coffeeMugs", "soccerBalls", "topHats"];
+const businesses = {};
 types.forEach((type) => {
   businesses[type] = createBusiness(type);
-})
+});
 
 function createBusiness(type) {
-  let name = type.replace( /([A-Z])/g, " $1" );
+  let name = type.replace(/([A-Z])/g, " $1");
   name = name.charAt(0).toUpperCase() + name.slice(1);
-  let business =  {
+  let business = {
     position: pointers.position.clone(),
     profit: pointers.profit,
     productionRate: pointers.productionRate,
@@ -37,8 +31,8 @@ function createBusiness(type) {
     type: type,
     name: name,
     purchaseCost: pointers.purchaseCost,
-    shadowSize : pointers.shadowSize,
-  }
+    shadowSize: pointers.shadowSize,
+  };
   addBusiness(business, type);
   pointers.position.x += 7;
   pointers.profit *= 5;
@@ -50,15 +44,15 @@ function createBusiness(type) {
   return business;
 }
 
-businesses.getClickables = function() {
-  let clickables = []
+businesses.getClickables = function () {
+  let clickables = [];
   Object.keys(businesses).forEach((key) => {
-    let business = businesses[key]
+    let business = businesses[key];
     if (business.building && business.building.clickable) {
-      clickables.push(business.building.clickable)
+      clickables.push(business.building.clickable);
     }
-  })
-  return clickables
-}
+  });
+  return clickables;
+};
 
-export default businesses
+export default businesses;
