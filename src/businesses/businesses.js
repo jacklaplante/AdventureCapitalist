@@ -9,7 +9,7 @@ var pointers = {
   upgradeCost: 10,
   managerCost: 100,
   purchaseCost: 50,
-  shadowSize: 2, // coincidentally the products get bigger as they get more expensive so I will use this to roughly scale the shadow size as well
+  shadowSize: 2, // (HACK) coincidentally the products get bigger as they get more expensive so I will use this to roughly scale the shadow size as well
 };
 
 const types = ["eggs", "waffles", "coffeeMugs", "soccerBalls", "topHats"];

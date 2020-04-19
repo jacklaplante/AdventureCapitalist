@@ -3,10 +3,9 @@ import scene from "./scene";
 import camera from "./camera";
 import { renderer } from "./renderer";
 import { toMoneyText } from "./utils";
-import { adjectives, nouns } from "./constants";
 import businesses from "./businesses/businesses";
 
-var clock = new Clock();
+const clock = new Clock();
 
 window.addEventListener("resize", resize);
 
@@ -42,7 +41,9 @@ function start(playerNameInput) {
   updateMoney(global.player.money);
   document.getElementById("splash").remove();
 
-  showHint("Click on the egg to start an egg business!");
+  if (global.player.new) {
+    showHint("Click on the egg to start an egg business!");
+  }
 
   document.addEventListener("mousedown", onMouseDown);
   document.addEventListener("mousemove", onMouseMove);
@@ -50,12 +51,6 @@ function start(playerNameInput) {
   document.addEventListener("wheel", updateCamera);
 }
 
-var hint = {
-  element: document.getElementById("hint"),
-  message: document.getElementById("hint").querySelector(".message"),
-  close: document.getElementById("hint").querySelector(".close"),
-};
-hint.close.onclick = (_) => hideHint();
 function showHint(message) {
   hint.element.style.display = "inline-block";
   hint.message.innerText = message;
@@ -98,10 +93,9 @@ function onMouseDown(e) {
   mouseTarget = object;
 }
 
-var contextMenu = document.getElementById("context-menu");
 var purchaseBusinessMenu = document.getElementById("purchase-business");
 function hideMenus() {
-  contextMenu.style.display = "none";
+  contextMenu.menu.style.display = "none";
   purchaseBusinessMenu.style.display = "none";
 }
 
@@ -122,4 +116,23 @@ function objectClicked(e) {
   }
 }
 
-export { start, load, showHint, hideHint, updateMoney };
+const contextMenu = {
+  menu: document.getElementById("context-menu"),
+  upgrade: document.getElementById("upgrade-button"),
+  upgradeCost: document.getElementById("upgrade-button").querySelector(".cost"),
+  manager: document.getElementById("manager-button"),
+  managerCost: document.getElementById("manager-button").querySelector(".cost"),
+  businessInfo: {
+    info: document.getElementById("business-info").querySelector(".info"),
+    profit: document.getElementById("business-info").querySelector(".cost"),
+  },
+};
+
+const hint = {
+  element: document.getElementById("hint"),
+  message: document.getElementById("hint").querySelector(".message"),
+  close: document.getElementById("hint").querySelector(".close"),
+};
+hint.close.onclick = (_) => hideHint();
+
+export { start, load, showHint, hideHint, updateMoney , contextMenu };

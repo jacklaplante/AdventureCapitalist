@@ -1,13 +1,14 @@
 import { Vector3, AnimationMixer, LoopOnce, BoxGeometry, Mesh, PlaneBufferGeometry, MeshBasicMaterial, TextureLoader } from "three";
 import scene from "../scene";
 import { getAnimation, toMoneyText } from "../utils";
-import { showHint, hideHint, updateMoney } from "../game";
+import { showHint, hideHint, updateMoney, contextMenu } from "../game";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
-var loader = new GLTFLoader();
-var textureLoader = new TextureLoader();
 import shadowTextureFile from "../../shadow.png";
 const models = require.context("../../models");
+
+const loader = new GLTFLoader();
+const textureLoader = new TextureLoader();
 
 function addBusiness(business, type) {
   business.building = {
@@ -287,19 +288,7 @@ function canAfford(cost) {
   return global.player.money - cost >= 0;
 }
 
-var contextMenu = {
-  menu: document.getElementById("context-menu"),
-  upgrade: document.getElementById("upgrade-button"),
-  upgradeCost: document.getElementById("upgrade-button").querySelector(".cost"),
-  manager: document.getElementById("manager-button"),
-  managerCost: document.getElementById("manager-button").querySelector(".cost"),
-  businessInfo: {
-    info: document.getElementById("business-info").querySelector(".info"),
-    profit: document.getElementById("business-info").querySelector(".cost"),
-  },
-};
-
-var purchaseBusiness = {
+const purchaseBusiness = {
   menu: document.getElementById("purchase-business"),
   message: document.getElementById("purchase-business").querySelector(".message"),
   cost: document.getElementById("purchase-business").querySelector(".cost"),
