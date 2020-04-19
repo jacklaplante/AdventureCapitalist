@@ -1,7 +1,7 @@
 import {Vector3, AnimationMixer, LoopOnce, BoxGeometry, Mesh, PlaneBufferGeometry, MeshBasicMaterial, TextureLoader} from 'three'
 import scene from '../scene'
-import {getAnimation} from '../utils'
-import { showHint, hideHint } from "../game";
+import {getAnimation, toMoneyText} from '../utils'
+import { showHint, hideHint, updateMoney } from "../game";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 var loader = new GLTFLoader();
@@ -103,10 +103,10 @@ function addBusiness(business, type) {
               }, 1000);
               addMoney(building.moneyToBePickedUp);
               if (global.player.new && business.type == 'eggs') {
-                if (scene.money == 10) {
+                if (global.player.money == 10) {
                   showHint("You made $" + building.moneyToBePickedUp + "! Keep clicking to keep selling, or upgrade to make more " + business.type + "!")
-                } else if (scene.money >= 100) {
-                  showHint("You now have $" + scene.money + "! Purchase a manager to automatically sell eggs!")
+                } else if (global.player.money >= 100) {
+                  showHint("You now have $" + global.player.money + "! Purchase a manager to automatically sell eggs!")
                 }
               }
             }
@@ -186,7 +186,7 @@ function addBusiness(business, type) {
               if (business.hasManager) {
                 building.pickUp()
               }
-              if (global.player.new && business.type == 'eggs' && scene.money == 0) {
+              if (global.player.new && business.type == 'eggs' && global.player.money == 0) {
                 showHint('Click the egg to sell it!')
               }
             }
@@ -270,25 +270,17 @@ function getModelOrDefault(model, type) {
 }
 
 function subtractMoney(money) {
-  scene.money -= money;
+  global.player.money -= money;
   updateMoney()
 }
 
 function addMoney(money) {
-  scene.money += money;
+  global.player.money += money;
   updateMoney()
 }
 
-function updateMoney() {
-  document.getElementById("money").innerText = toMoneyText(scene.money)
-}
-
-function toMoneyText(money) {
-  return "$" + money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
 function canAfford(cost) {
-  return (scene.money - cost) >= 0
+  return (global.player.money - cost) >= 0
 }
 
 var contextMenu = {

@@ -2,7 +2,7 @@ import { Clock, Raycaster, Vector2, Vector3 } from 'three'
 import scene from './scene'
 import camera from './camera'
 import { renderer } from './renderer'
-import { getRandom } from './utils'
+import { toMoneyText } from './utils'
 import { adjectives, nouns } from './constants'
 import businesses from './businesses/businesses'
 
@@ -28,14 +28,19 @@ function resize() {
     camera.updateProjectionMatrix();
 }
 
+function load() {
+    document.body.appendChild(renderer.domElement)
+    animate();
+}
+
 function start(playerNameInput) {
     global.player = {
         name: playerNameInput,
-        new: true
+        new: true,
+        money: 50
     }
+    updateMoney(global.player.money)
     document.getElementById("splash").remove();
-    document.body.appendChild(renderer.domElement)
-    animate();
 
     showHint("Click on the egg to start an egg business!")
 
@@ -58,6 +63,10 @@ function showHint(message) {
 
 function hideHint() {
     hint.element.style.display = 'none'
+}
+
+function updateMoney() {
+    document.getElementById("money").innerText = toMoneyText(global.player.money)
 }
 
 function updateCamera() {
@@ -113,4 +122,4 @@ function objectClicked(e) {
     }
 }
 
-export {start, showHint, hideHint}
+export {start, load, showHint, hideHint, updateMoney}

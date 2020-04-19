@@ -3,6 +3,7 @@ body {
     display: grid;
     touch-action: none;
     font-family: 'Roboto Mono', monospace;
+    background-color: #90cca9;
 }
 
 canvas {
