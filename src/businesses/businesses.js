@@ -34,6 +34,7 @@ function createBusiness(type) {
     upgradeCost: pointers.upgradeCost,
     managerCost: pointers.managerCost,
     hasManager: false,
+    type: type,
     name: name,
     purchaseCost: pointers.purchaseCost,
     shadowSize : pointers.shadowSize,

@@ -20,7 +20,7 @@ canvas {
     color: rgb(255, 232, 188);
 }
 
-#context-menu, #purchase-business {
+#context-menu, #purchase-business, #hint {
     display: none;
     position: fixed;
     background: beige;
@@ -28,8 +28,31 @@ canvas {
     border-radius: 8pt;
     border: 2pt solid #73AD21;
     font-size: 18pt;
+}
+
+#context-menu, #purchase-business {
     bottom: 10vh;
     right: 10vw;
+}
+
+#hint {
+    top: 10vh;
+    left: 10vw;
+    /* width: 80vw; */
+}
+
+#hint .message {
+ width: 90%;
+ float: left;
+}
+
+#hint .close {
+    float: right;
+    margin-left: 10pt;
+    position: relative;
+    top: -5pt;
+    color: #f10000;
+    font-size: 20pt;
 }
 
 #context-menu div {
@@ -69,4 +92,8 @@ canvas {
 
 .disabled, .disabled .cost {
     cursor: not-allowed;
+}
+
+#hint {
+    display: none;
 }

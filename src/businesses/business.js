@@ -1,6 +1,7 @@
 import {Vector3, AnimationMixer, LoopOnce, BoxGeometry, Mesh, PlaneBufferGeometry, MeshBasicMaterial, TextureLoader} from 'three'
 import scene from '../scene'
 import {getAnimation} from '../utils'
+import { showHint, hideHint } from "../game";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 var loader = new GLTFLoader();
@@ -52,6 +53,9 @@ function addBusiness(business, type) {
       clickable.material.visible = false;
       clickable.onclick = function() {
         if (building.floors.length == 0) {
+          if (global.player.new && type == 'eggs') {
+            showHint("Hit \'Start selling Eggs\'!");
+          } 
           purchaseBusiness.menu.style.display = "inline-block"
           updatePurchaseMenu(business);
         } else {
@@ -98,6 +102,13 @@ function addBusiness(business, type) {
                 building.manager.waveAnim.reset().play()
               }, 1000);
               addMoney(building.moneyToBePickedUp);
+              if (global.player.new && business.type == 'eggs') {
+                if (scene.money == 10) {
+                  showHint("You made $" + building.moneyToBePickedUp + "! Keep clicking to keep selling, or upgrade to make more " + business.type + "!")
+                } else if (scene.money >= 100) {
+                  showHint("You now have $" + scene.money + "! Purchase a manager to automatically sell eggs!")
+                }
+              }
             }
             building.moneyToBePickedUp = -1;
             building.floors.forEach((building) => building.loadingAnim.stop());
@@ -105,6 +116,7 @@ function addBusiness(business, type) {
           }
           building.upgrade = function() {
             if (!canAfford(business.upgradeCost)) return;
+            hideHint();
             contextMenu.menu.style.display = 'none'
             subtractMoney(business.upgradeCost);
             loader.load(models("./building_middle.glb"), (gltf) => {
@@ -155,6 +167,8 @@ function addBusiness(business, type) {
           }
           building.buyManager = function() {
             if (!canAfford(business.managerCost)) return;
+            global.player.new = false;
+            hideHint();
             document.getElementById('context-menu').style.display = 'none'
             subtractMoney(business.managerCost)
             business.hasManager = true;
@@ -171,6 +185,9 @@ function addBusiness(business, type) {
               scene.add(building.productObj)
               if (business.hasManager) {
                 building.pickUp()
+              }
+              if (global.player.new && business.type == 'eggs' && scene.money == 0) {
+                showHint('Click the egg to sell it!')
               }
             }
           });
@@ -214,6 +231,9 @@ function updatePurchaseMenu(business) {
   purchaseBusiness.message.innerText = "Start selling " + business.name + ": "
   purchaseBusiness.cost.innerText = "-" + toMoneyText(business.purchaseCost);
   purchaseBusiness.menu.onclick = _ => {
+    if (global.player.new && business.type == 'eggs') {
+      showHint("Congrats! Click the building to produce an egg!")
+    }
     business.building.purchase();
   }
 }

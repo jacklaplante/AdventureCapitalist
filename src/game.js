@@ -29,14 +29,35 @@ function resize() {
 }
 
 function start(playerNameInput) {
+    global.player = {
+        name: playerNameInput,
+        new: true
+    }
     document.getElementById("splash").remove();
     document.body.appendChild(renderer.domElement)
     animate();
+
+    showHint("Click on the egg to start an egg business!")
 
     document.addEventListener('mousedown', onMouseDown);
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
     document.addEventListener('wheel', updateCamera);
+}
+
+var hint = {
+    element: document.getElementById('hint'),
+    message: document.getElementById('hint').querySelector('.message'),
+    close: document.getElementById('hint').querySelector('.close')
+}
+hint.close.onclick = _ => hideHint()
+function showHint(message) {
+    hint.element.style.display = 'inline-block'
+    hint.message.innerText = message;
+}
+
+function hideHint() {
+    hint.element.style.display = 'none'
 }
 
 function updateCamera() {
@@ -92,4 +113,4 @@ function objectClicked(e) {
     }
 }
 
-export {start}
+export {start, showHint, hideHint}
