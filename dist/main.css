@@ -104,3 +104,43 @@ canvas {
 #hint {
   display: none;
 }
+
+#splash {
+  position: relative;
+  top: 30vh;
+}
+
+#title {
+  text-align: center;
+  color: rgb(255, 232, 188);
+  font-size: 8vh;
+}
+
+#username {
+  display: inline-block;
+  margin: 6vh 0 0 28vw;
+}
+
+#username input {
+  font-size: 20pt;
+}
+
+#start-game {
+  background: beige;
+  padding: 6pt 12pt 8pt 12pt;
+  border-radius: 8pt;
+  border: 2pt solid #73ad21;
+  display: inline-block;
+  font-size: 42pt;
+  margin: 6vh;
+}
+
+#start-game:hover {
+  cursor: pointer;
+  background: #73ad21;
+  color: white;
+}
+
+#bottom {
+  text-align: center;
+}
