@@ -1,5 +1,7 @@
 import { Vector3 } from "three";
 import { addBusiness } from "./business";
+import { getAnimation } from "../utils";
+import { updateMoney } from "../game";
 
 // these will be used to create the initial values of each business, and increase them incrementally
 var pointers = {
@@ -59,17 +61,53 @@ businesses.getClickables = function () {
 businesses.loadBusinessData = function (businessData) {
   Object.keys(businesses).forEach((key) => {
     let business = businesses[key];
-    if (business.building) {
+    if (business.building && businessData && businessData[business.type] && businessData[business.type].floors > 0) {
       let building = business.building;
-      if (businessData && businessData[business.type] && businessData[business.type].floors > 0) {
-        building.addBuilding();
-        if (businessData[business.type].floors > 1) {
-          for (let i = 1; i < businessData[business.type].floors; i++) {
-            building.addFloor();
+      let data = businessData[business.type];
+      building.addBuilding();
+      let floorCount = data.floors;
+      // this is super hacky
+      let bottomLoadingDuration = (building.floors[0].loadingAnim.getClip().duration * 1) / business.productionRate;
+      let middleLoadingDuration = (getAnimation(building.middleGltf, "loading.001").duration * 1) / business.productionRate;
+      let productionTime = bottomLoadingDuration + middleLoadingDuration * (floorCount - 1);
+      if (floorCount > 1) {
+        for (let i = 1; i < floorCount; i++) {
+          building.addFloor();
+        }
+      }
+      if (data.hasManager) {
+        building.addManager();
+      }
+      if (data.lastPickupTime) {
+        let secSinceLastPickup = (Date.now() - data.lastPickupTime) / 1000;
+        let currentProgress;
+        if (data.hasManager) {
+          let production = secSinceLastPickup / productionTime;
+          global.player.money += Math.floor(production) * business.profit * business.building.floorCount;
+          updateMoney();
+          currentProgress = productionTime * ((secSinceLastPickup / productionTime) % 1);
+        } else {
+          if (secSinceLastPickup > productionTime) {
+            // show product
+            currentProgress = productionTime;
+          } else {
+            currentProgress = secSinceLastPickup;
           }
         }
-        if (businessData[business.type].hasManager) {
-          building.addManager();
+        for (let i = building.floorCount - 1; i >= 0; i--) {
+          if (currentProgress > 0) {
+            let floor = building.floors[i];
+            let loadingDuration = (floor.loadingAnim.getClip().duration * 1) / business.productionRate;
+            if (currentProgress > loadingDuration) {
+              floor.loadingAnim.time = floor.loadingAnim.getClip().duration;
+              floor.loadingAnim.play().paused = true;
+              currentProgress -= loadingDuration;
+            } else {
+              floor.loadingAnim.time = currentProgress * business.productionRate;
+              floor.loadingAnim.play();
+              currentProgress = 0;
+            }
+          }
         }
       }
     }
