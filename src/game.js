@@ -32,17 +32,15 @@ function load() {
   animate();
 }
 
-function start(playerNameInput) {
-  global.player = {
-    name: playerNameInput,
-    new: true,
-    money: 50,
-  };
+function start() {
   updateMoney(global.player.money);
   document.getElementById("splash").remove();
 
   if (global.player.new) {
     showHint("Click on the egg to start an egg business!");
+  }
+  if (global.player.businessData) {
+    businesses.loadBusinessData(global.player.businessData);
   }
 
   document.addEventListener("mousedown", onMouseDown);
@@ -135,4 +133,4 @@ const hint = {
 };
 hint.close.onclick = (_) => hideHint();
 
-export { start, load, showHint, hideHint, updateMoney , contextMenu };
+export { start, load, showHint, hideHint, updateMoney, contextMenu };

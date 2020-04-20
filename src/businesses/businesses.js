@@ -13,7 +13,8 @@ var pointers = {
 };
 
 const types = ["eggs", "waffles", "coffeeMugs", "soccerBalls", "topHats"];
-const businesses = {};
+global.businesses = {};
+const businesses = global.businesses;
 types.forEach((type) => {
   businesses[type] = createBusiness(type);
 });
@@ -53,6 +54,26 @@ businesses.getClickables = function () {
     }
   });
   return clickables;
+};
+
+businesses.loadBusinessData = function (businessData) {
+  Object.keys(businesses).forEach((key) => {
+    let business = businesses[key];
+    if (business.building) {
+      let building = business.building;
+      if (businessData && businessData[business.type] && businessData[business.type].floors > 0) {
+        building.addBuilding();
+        if (businessData[business.type].floors > 1) {
+          for (let i = 1; i < businessData[business.type].floors; i++) {
+            building.addFloor();
+          }
+        }
+        if (businessData[business.type].hasManager) {
+          building.addManager();
+        }
+      }
+    }
+  });
 };
 
 export default businesses;

@@ -16,4 +16,32 @@ function getAnimation(gltf, name) {
   return result;
 }
 
-export { toMoneyText, getAnimation };
+const request = new XMLHttpRequest();
+function postPlayerData() {
+  request.open("POST", "https://k5qf9mar6h.execute-api.us-east-1.amazonaws.com/test/user?userName=" + global.player.name);
+  request.setRequestHeader("Content-Type", "application/json");
+  request.send(
+    JSON.stringify({
+      money: global.player.money,
+      businesses: getBusinessData(),
+    })
+  );
+}
+
+function getBusinessData() {
+  // only gets the information that needs to be saved to the database
+  let businessData = {};
+  Object.keys(businesses).forEach((key) => {
+    let business = businesses[key];
+    if (business.building) {
+      businessData[key] = {
+        floors: business.building.floorCount,
+        hasManager: business.hasManager,
+        lastPickupTime: business.lastPickupTime,
+      };
+    }
+  });
+  return JSON.stringify(businessData);
+}
+
+export { toMoneyText, getAnimation, postPlayerData };
