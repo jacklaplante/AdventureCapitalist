@@ -291,22 +291,24 @@ function updatePurchaseMenu(business) {
 function updateContextMenu(business) {
   if (canAfford(business.upgradeCost)) {
     contextMenu.upgrade.className = "enabled";
+    contextMenu.upgrade.onclick = (_) => {
+      business.building.upgrade();
+    };
   } else {
     contextMenu.upgrade.className = "disabled";
+    contextMenu.upgrade.onclick = null;
   }
   contextMenu.upgradeCost.innerText = "-" + toMoneyText(business.upgradeCost);
-  contextMenu.upgrade.onclick = (_) => {
-    business.building.upgrade();
-  };
   if (canAfford(business.managerCost) && !business.hasManager) {
     contextMenu.manager.className = "enabled";
+    contextMenu.manager.onclick = (_) => {
+      business.building.buyManager();
+    };
   } else {
     contextMenu.manager.className = "disabled";
+    contextMenu.manager.onclick = null;
   }
   contextMenu.managerCost.innerText = "-" + toMoneyText(business.managerCost);
-  contextMenu.manager.onclick = (_) => {
-    business.building.buyManager();
-  };
   contextMenu.businessInfo.info.innerText = business.name + ": " + business.profit + "x" + business.building.floorCount + " = ";
   contextMenu.businessInfo.profit.innerText = "+" + toMoneyText(business.profit * business.building.floorCount);
 }
