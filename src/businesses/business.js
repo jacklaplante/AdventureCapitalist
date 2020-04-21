@@ -1,14 +1,11 @@
-import { Vector3, AnimationMixer, LoopOnce, BoxGeometry, Mesh, PlaneBufferGeometry, MeshBasicMaterial, TextureLoader } from "three";
+import { Vector3, AnimationMixer, LoopOnce, BoxGeometry, Mesh, PlaneBufferGeometry, MeshBasicMaterial } from "three";
 import scene from "../scene";
 import { getAnimation, toMoneyText, postPlayerData } from "../utils";
 import { showHint, hideHint, updateMoney, contextMenu } from "../game";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import loaders from "../loaders";
 
 import shadowTextureFile from "../../shadow.png";
-const models = require.context("../../models");
-
-const loader = new GLTFLoader();
-const textureLoader = new TextureLoader();
+const models = require.context("../../models/business");
 
 function addBusiness(business, type) {
   business.building = {
@@ -151,7 +148,7 @@ function addBusiness(business, type) {
   };
   building.updateClickable();
 
-  loader.load(getModelOrDefault("manager", type), (gltf) => {
+  loaders.gltf.load(getModelOrDefault("manager", type), (gltf) => {
     gltf.scene.position.copy(business.position);
     gltf.scene.position.x -= 2;
     gltf.scene.position.z += 2;
@@ -182,7 +179,7 @@ function loadBuilding(business) {
 
 function loadRoof(business) {
   let building = business.building;
-  loader.load(getModelOrDefault("building_top", business.type), (gltf) => {
+  loaders.gltf.load(getModelOrDefault("building_top", business.type), (gltf) => {
     gltf.scene.position.copy(business.position);
     gltf.scene.position.y += 2;
     building.roof = gltf.scene;
@@ -191,7 +188,7 @@ function loadRoof(business) {
 
 function loadMiddle(business) {
   let building = business.building;
-  loader.load(models("./building_middle.glb"), (gltf) => {
+  loaders.gltf.load(models("./building_middle.glb"), (gltf) => {
     gltf.scene.position.copy(business.position);
     building.middleGltf = gltf;
   });
@@ -199,7 +196,7 @@ function loadMiddle(business) {
 
 function loadBottom(business) {
   let building = business.building;
-  loader.load(models("./building_bottom.glb"), (gltf) => {
+  loaders.gltf.load(models("./building_bottom.glb"), (gltf) => {
     gltf.scene.position.copy(business.position);
     building.bottom = gltf.scene;
     let mixer = new AnimationMixer(gltf.scene);
@@ -242,10 +239,10 @@ function loadClickable(business) {
 
 function loadProduct(business) {
   let building = business.building;
-  loader.load(getModelOrDefault("product", business.type), (gltf) => {
+  loaders.gltf.load(getModelOrDefault("product", business.type), (gltf) => {
     gltf.scene.position.copy(business.position);
     scene.add(gltf.scene);
-    textureLoader.load(shadowTextureFile, (shadowTexture) => {
+    loaders.texture.load(shadowTextureFile, (shadowTexture) => {
       let size = business.shadowSize;
       let shadow = new Mesh(
         new PlaneBufferGeometry(size, size),

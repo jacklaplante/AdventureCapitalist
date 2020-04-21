@@ -1,5 +1,5 @@
-import { Scene, PlaneGeometry, MeshBasicMaterial, BoxGeometry, Mesh, PlaneBufferGeometry, DirectionalLight, HemisphereLight, DoubleSide, AnimationMixer, Color, LoopOnce } from "three";
-
+import { Scene, PlaneGeometry, MeshBasicMaterial, Mesh, DirectionalLight, HemisphereLight } from "three";
+import loaders from "./loaders";
 import { colors } from "./constants";
 
 var scene = new Scene();
